@@ -1,3 +1,5 @@
 Django==1.7
 folium==0.1.6
+Jinja2==2.8
+MarkupSafe==0.23
 wheel==0.24.0
