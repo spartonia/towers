@@ -4,6 +4,9 @@ Postgres
 `sudo apt-get update
 sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
 `
+postGIS
+`sudo apt-get install -y postgis postgresql-9.3-postgis-2.1`
+
 `sudo su - postgres`
 `psql`
 
@@ -13,6 +16,11 @@ sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contr
 `ALTER ROLE toweruser SET client_encoding TO 'utf8';`
 
 `GRANT ALL PRIVILEGES ON DATABASE Towers TO toweruser;`
+
+`\connect towers;`
+`CREATE EXTENSION postgis;`
+`CREATE EXTENSION postgis_topology;`
+
 `\q`
 `exit`
 
