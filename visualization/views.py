@@ -13,8 +13,6 @@ def inline_map(
     Parameters
     ----------
     m : <folium instance>
-    width : int
-    height : int
 
     Returns
     -------
@@ -43,15 +41,16 @@ def get_coordinates(
     -------
     coordinates : [(float, float)]
     """
-    coordinates = OpenCellId.objects.filter(
-        mcc__in=mcc_list
-    ).values_list('lat', 'lon')
+    try:
+        coordinates = OpenCellId.objects.filter(
+            mcc__in=mcc_list
+        ).values_list('lat', 'lon')
+    except:
+        coordinates = []
     return coordinates
 
 
 def index(request):
-    # width, height = 650, 500
-    # html = "<html><body>Almost there</body></html>"
     coords = get_coordinates()
     towers = folium.Map(
         location=[30, 31],
