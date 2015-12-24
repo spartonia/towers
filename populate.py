@@ -1,11 +1,18 @@
 import os
 import csv
+import pandas as pd
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Towers.settings')
 
 import django
 django.setup()
 
-from visualization.models import OpenCellId
+from django.contrib.gis.utils import LayerMapping
+
+from visualization.models import (
+    OpenCellId,
+    # GADM,
+    gadm_mapping
+)
 
 
 mcc_good = [
@@ -13,8 +20,12 @@ mcc_good = [
 ]
 
 
-def popuplate_OpenCellId(
-    csv_file='cell_towers.csv',
+def populate_OpenCellId(
+    csv_file=os.path.join(
+        os.path.abspath('../'),
+        'data',
+        'cell_towers.csv'
+    ),
     mcc_list=mcc_good
 ):
     """Populate OpenCellId model.
@@ -25,23 +36,65 @@ def popuplate_OpenCellId(
     """
 
     print 'Populating OpenCellId ..'
-    with open(csv_file) as f:
-        csv_dict = csv.DictReader(f)
-        bulk_open_cell_ids = []
-        for line in csv_dict:
-            if int(line['mcc']) in mcc_list:
-                if not line['unit']:
-                    line['unit'] = None
-                try:
-                    ocid = OpenCellId(**line)
-                    # bulk_open_cell_ids.append(ocid)
-                    ocid.save()
-                except Exception as e:
-                    print e
-                    print 'At line:', csv_dict.line_num
-                    pass
+    try:
+        csv_data = pd.read_csv(csv_file)
+    except Exception as e:
+        print 'Error reading OpenCellId data'
+        print e.message
+        return
 
-    # OpenCellId.objects.bulk_create(bulk_open_cell_ids)
+    good_data = csv_data[csv_data['mcc'].isin(mcc_list)]
+    good_data['averageSignal'].fillna(0, inplace=True)
+    good_data.dropna(
+        subset=good_data.columns.drop('unit'),
+        inplace=True
+    )
+    good_data.reset_index(
+        inplace=True,
+        drop=True
+    )
+
+    bulk_open_cell_ids = []
+    for idx, row in good_data.iterrows():
+        line = row.to_dict()
+        if str(line['unit']) == 'nan':
+            line['unit'] = None
+        try:
+            ocid = OpenCellId(**line)
+            bulk_open_cell_ids.append(ocid)
+        except Exception as e:
+            print e
+            print 'in line:', idx
+            pass
+        
+    OpenCellId.objects.bulk_create(bulk_open_cell_ids)
+
     print 'Done!'
+
+
+def populate_GADM(
+    path_to_shp=os.path.join(
+        os.path.abspath('../'),
+        'data',
+        'EGY_adm0.shp'
+    ),
+    verbose=True
+):
+
+    try:
+        lm = LayerMapping(
+            GADM,
+            path_to_shp,
+            gadm_mapping,
+            # transform=False,
+        )
+        lm.save()
+    except Exception as e:
+        print 'Error loading GADM data!'
+        print e.message
+        pass
+
 if __name__ == '__main__':
-    popuplate_OpenCellId()
+    populate_OpenCellId()
+    # populate_GADM()
+    pass

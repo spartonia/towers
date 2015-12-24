@@ -29,5 +29,7 @@ python manage.py migrate
 
 python manage.py createsuperuser
 
+python poulate.py
+
 python manage.py runserver
 
