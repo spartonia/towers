@@ -2,8 +2,9 @@ import folium
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.gis.geos import Point
 
-from .models import OpenCellId
+from .models import OpenCellId, GADM
 
 
 def inline_map(
@@ -44,7 +45,7 @@ def get_coordinates(
     try:
         coordinates = OpenCellId.objects.filter(
             mcc__in=mcc_list
-        ).values_list('lat', 'lon')
+        ).values_list('lon', 'lat')
     except:
         coordinates = []
     return coordinates
@@ -52,16 +53,45 @@ def get_coordinates(
 
 def index(request):
     coords = get_coordinates()
+    boundry = GADM.objects.all()[0].geom.boundary
     towers = folium.Map(
-        location=[30, 31],
+        location=boundry.centroid[::-1],
+        # location=[30, 31],
         zoom_start=5,
-        tiles='OpenStreetMap'
+        # tiles='OpenStreetMap'
+        tiles='Mapbox Bright'
     )
+    for b_line in boundry:
+        b_line = [(i[1], i[0]) for i in b_line]
+        towers.line(b_line, line_color='green', line_weight=5)
+
     for loc in coords:
-        towers.simple_marker(
-            location=loc,
-            popup=str(loc)
+        towers.circle_marker(
+            location=loc[::-1],
+            fill_color='orange',
+            line_color='orange'
+            # popup=str(loc)
+        )
+
+    test_p = Point(27.674483, 27.217795).buffer(100)
+    # import ipdb; ipdb.set_trace()
+    for b in test_p:
+        towers.circle_marker(
+            location=b[::-1],
+            fill_color='blue'
         )
     html = inline_map(towers)
     return HttpResponse(html)
 
+
+def is_covered(
+    point=(0,0)
+):
+    """
+
+    :param point:
+    :return:
+    """
+    # find the points which their distance to the base point is less than or
+    # equal to their coverage (range); then rank in distance decs.
+    pass

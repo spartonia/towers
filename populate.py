@@ -1,5 +1,4 @@
 import os
-import csv
 import pandas as pd
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Towers.settings')
 
@@ -10,8 +9,8 @@ from django.contrib.gis.utils import LayerMapping
 
 from visualization.models import (
     OpenCellId,
-    # GADM,
-    gadm_mapping
+    GADM,
+    gadm_mapping,
 )
 
 
@@ -73,20 +72,21 @@ def populate_OpenCellId(
 
 
 def populate_GADM(
-    path_to_shp=os.path.join(
+    model=GADM,
+    path_to_data=os.path.join(
         os.path.abspath('../'),
         'data',
         'EGY_adm0.shp'
     ),
-    verbose=True
+    mapping_dict=gadm_mapping,
+    verbose=False
 ):
-
     try:
         lm = LayerMapping(
-            GADM,
-            path_to_shp,
+            model,
+            path_to_data,
             gadm_mapping,
-            # transform=False,
+            transform=False,
         )
         lm.save()
     except Exception as e:
@@ -94,7 +94,9 @@ def populate_GADM(
         print e.message
         pass
 
+
+
 if __name__ == '__main__':
     populate_OpenCellId()
-    # populate_GADM()
-    pass
+    populate_GADM()
+    # pass
