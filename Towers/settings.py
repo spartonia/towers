@@ -69,6 +69,20 @@ DATABASES = {
     }
 }
 
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+
+TEMPLATE_DIRS = (
+    TEMPLATE_PATH,
+    )
+print TEMPLATE_PATH
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+    },
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

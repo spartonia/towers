@@ -26,7 +26,7 @@ def inline_map(
     embed = """
         <iframe srcdoc="{}"
         style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none;
-        margin:0; padding:0; overflow:hidden; z-index:999999;";
+        margin:0; padding:0; overflow:hidden; z-index:2;";
          ></iframe>
      """.format(srcdoc)
     return embed
@@ -54,6 +54,7 @@ def get_coordinates(
 
 
 def index(request):
+    context_dict = {}
     coords = get_coordinates()
     boundry = GADM.objects.all()[0].geom.boundary
     towers = folium.Map(
@@ -80,19 +81,10 @@ def index(request):
         location=p[::-1],
         popup='elqasr %s' % str(elqasr)
     )
-    # import ipdb; ipdb.set_trace()
-    # p.transform(900913)
-    # test_p = p.buffer(220000)
-    # test_p.transform(4326)
-    # import ipdb; ipdb.set_trace()
-    # for b in test_p:
-    #     b = [i[::-1] for i in b]
-    #     towers.line(
-    #         b,
-    #         line_color='blue',
-    #     )
-    html = inline_map(towers)
-    return HttpResponse(html)
+
+    map_html = inline_map(towers)
+    context_dict['map_html'] = map_html
+    return render(request, 'visualization/index.html', context_dict)
 
 
 def create_coverage_area():
@@ -115,7 +107,7 @@ def create_coverage_area():
 
 
 def is_covered(
-    point=(0, 0),
+    point,
     country_name='Egypt'
 ):
     """Tells if the point is covered by the signal. Finds the points which their distance to the
@@ -139,6 +131,10 @@ def is_covered(
     lookup_point = Point(*point, srid=4326)
     country_geom = GADM.objects.get(name_engli__iexact=country_name).geom
     if OpenCellId.objects.filter(coord__within=country_geom).extra(
+        select={
+            'coord': 'coord',
+            'range': 'CASE WHEN range > 0 THEN range ELSE 10000 END'
+        },
         where=['ST_Distance_Sphere(coord, ST_PointFromText(%s, 4326)) <= range'],
         params=[lookup_point.wkt]
     ).exists():
