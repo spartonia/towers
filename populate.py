@@ -53,20 +53,20 @@ def populate_OpenCellId(
         drop=True
     )
 
-    bulk_open_cell_ids = []
+    # bulk_open_cell_ids = []
     for idx, row in good_data.iterrows():
         line = row.to_dict()
         if str(line['unit']) == 'nan':
             line['unit'] = None
         try:
             ocid = OpenCellId(**line)
-            bulk_open_cell_ids.append(ocid)
+            ocid.save()
         except Exception as e:
             print e
             print 'in line:', idx
             pass
         
-    OpenCellId.objects.bulk_create(bulk_open_cell_ids)
+    # OpenCellId.objects.bulk_create(bulk_open_cell_ids)
 
     print 'Done!'
 
@@ -93,7 +93,6 @@ def populate_GADM(
         print 'Error loading GADM data!'
         print e.message
         pass
-
 
 
 if __name__ == '__main__':

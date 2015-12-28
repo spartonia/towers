@@ -21,6 +21,21 @@ class OpenCellId(models.Model):
     created = models.IntegerField()
     updated = models.IntegerField()
     averageSignal = models.IntegerField()
+    coord = models.PointField(null=True)
+    objects = models.GeoManager()
+
+    def save(
+        self,
+        *args,
+        **kwargs
+    ):
+        self.coord = Point(self.lat, self.lon, srid=4326)
+        # p.transform(900913)
+        # buffer_width = self.range if self.range > 0 else 10000
+        # buffered = p.buffer(buffer_width)
+        # buffered.transform(4326)
+        # self.coverage_geom.append(buffered)
+        super(OpenCellId, self).save(*args, **kwargs)
 
 
 # This is an auto-generated Django model module created by ogrinspect.
@@ -99,13 +114,26 @@ class GADM(models.Model):
     def is_valid_point(
         country_name,
         point,
-        km=50
+        margin_km=50
     ):
-        pnt = Point(*point[::-1])
-        country = GADM.objects.filter(name_engli__istartswith=country_name)
+        """
+        Checks if the point is within county's borders with margin of 'margin_km' kilometers from its borders.
+
+        Parameters
+        ----------
+        country_name : str
+        point : tuple
+        margin_km : int
+
+        Returns
+        -------
+        status : bool
+        """
+        pnt = Point(*point, srid=4326)
+        country = GADM.objects.filter(name_engli__iexact=country_name)
         if not country:
             return False
-        if country.distance(pnt)[0].distance.km < km:
+        if country.distance(pnt).get(name_engli__iexact=country_name).distance.km < margin_km:
             return True
         return False
 
