@@ -83,7 +83,7 @@ def index(request):
     )
 
     map_html = inline_map(towers)
-    context_dict['map_html'] = map_html
+    # context_dict['map_html'] = map_html
     return render(request, 'visualization/index.html', context_dict)
 
 

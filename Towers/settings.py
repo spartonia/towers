@@ -38,6 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'visualization',
+    'dajaxice',
+    'dajax',
+    'clear_cache',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -83,6 +86,11 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -101,4 +109,30 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages'
+)
+
+STATICFILES_FINDERS = (
+    'dajaxice.finders.DajaxiceFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
+
+)
+STATIC_PATH = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
+STATIC_URL = '/static/' # You may find this is already defined as such.
+
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)
+
+
+

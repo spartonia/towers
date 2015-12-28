@@ -4,7 +4,8 @@ Postgres
 `sudo apt-get update
 sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
 `
-postGIS
+PostGIS
+-------
 `sudo apt-get install -y postgis postgresql-9.3-postgis-2.1`
 
 `sudo su - postgres`
@@ -28,7 +29,7 @@ postGIS
 `virtualenv motionlogic`
 `source motionlogic/bin/activate`
 
-`pip install requirements.txt`
+`pip install -r requirements.txt`
 
 
 cd ~/Towers
@@ -38,6 +39,8 @@ python manage.py migrate
 python manage.py createsuperuser
 
 python poulate.py
+
+python manage.py collectstatic
 
 python manage.py runserver
 
