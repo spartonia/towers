@@ -25,8 +25,9 @@
     }
     </style>
     {% dajaxice_js_import %}
-    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://getbootstrap.com/2.3.2/assets/js/html5shiv.js"></script>
@@ -45,13 +46,14 @@
       <div class="container">
         <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Latitude">
+          <input id="lat" type="text" class="form-control" placeholder="Latitude">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Longitude">
+          <input id="lon" type="text" class="form-control" placeholder="Longitude">
         </div>
-        <button type="button" class="btn btn-default" onclick="Dajaxice.visualization.sayhello(my_js_callback);">Search</button>
+        <button id="pointStatusBtn" type="button" class="btn btn-default">Search coords</button>
         </form>
+        <div id="statusMessageHolder"></div>
       </div>
     </nav>
 
@@ -60,9 +62,23 @@
     </div>
 
     <script>
-      function my_js_callback(data){
-    alert(data.message);
-}
+
+      function handleStatus(data){
+         $('#statusMessageHolder').show().html('<h4 class="text-info">' + data.status + '</h4>').delay(7000).fadeOut(2000);
+      };
+      $(document).ready(function(){
+        $('#pointStatusBtn').click(function(){
+            var latitude = parseFloat($('#lat').val());
+            var longitude = parseFloat($('#lon').val());
+            Dajaxice.visualization.is_covered(
+                handleStatus,
+                {
+                    'lat': latitude,
+                    'lon': longitude
+                }
+            );
+        });
+      })
     </script>
 
     <!-- Le javascript

@@ -1,21 +1,19 @@
 import folium
 
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib.gis.geos import Point, GeometryCollection
 
 from .models import OpenCellId, GADM
 
 
-# NOTE : we stick with the 4326 standard i.e (lat/lon) - inverse of google map coords- for creating geometries.
+# NOTE : we stick with the 4326 standard i.e (lat/lon) - which is inverse of google map coords- for creating geometries.
 
 def inline_map(
     m
 ):
-    """Takes a folium instance and embed HTML.
+    """Takes a folium.Map instance and embed HTML.
     Parameters
     ----------
-    m : <folium instance>
+    m : <folium.Map>
 
     Returns
     -------
@@ -35,7 +33,7 @@ def inline_map(
 def get_coordinates(
     mcc_list=[602]
 ):
-    """Returns lon/lat of matching mcc_list
+    """Returns lat/lon of the country of matching mcc_list
     Parameters
     ----------
     mcc_list : [int]
@@ -59,7 +57,6 @@ def index(request):
     boundry = GADM.objects.all()[0].geom.boundary
     towers = folium.Map(
         location=boundry.centroid[::-1],
-        # location=[30, 31],
         zoom_start=5,
         # tiles='OpenStreetMap'
         tiles='Mapbox Bright'
@@ -73,79 +70,8 @@ def index(request):
             location=loc[::-1],
             fill_color='orange',
             line_color='orange'
-            # popup=str(loc)
         )
-    elqasr = (28.830439, 25.579540)
-    p = Point(elqasr, srid=4326)
-    towers.simple_marker(
-        location=p[::-1],
-        popup='elqasr %s' % str(elqasr)
-    )
 
     map_html = inline_map(towers)
-    # context_dict['map_html'] = map_html
+    context_dict['map_html'] = map_html
     return render(request, 'visualization/index.html', context_dict)
-
-
-def create_coverage_area():
-    ocid_list = OpenCellId.objects.all().values_list(
-        'lon',
-        'lat',
-        'range'
-    )
-    coverage_collection = []
-    for ocid in ocid_list:
-        lon, lat, range_ = ocid
-        p = Point(lat, lon, srid=4326)
-        p.transform(900913)
-        buffer_width = range_ if range_ > 0 else 10000
-        buffered = p.buffer(buffer_width)
-        buffered.transform(4326)
-        coverage_collection.append(buffered)
-
-    return coverage_collection
-
-
-def is_covered(
-    point,
-    country_name='Egypt'
-):
-    """Tells if the point is covered by the signal. Finds the points which their distance to the
-    lookup_point is less than or equal to their coverage (range).
-
-    Parameters
-    ----------
-    point : (float, float)
-        the format is in (lat, lon)
-    country_name : str
-
-    Returns
-    -------
-    status : bool
-    """
-
-    if not GADM.is_valid_point(country_name, point):
-        print 'point=%s is not a valid point in %s' %(point, country_name)
-        return False
-
-    lookup_point = Point(*point, srid=4326)
-    country_geom = GADM.objects.get(name_engli__iexact=country_name).geom
-    if OpenCellId.objects.filter(coord__within=country_geom).extra(
-        select={
-            'coord': 'coord',
-            'range': 'CASE WHEN range > 0 THEN range ELSE 10000 END'
-        },
-        where=['ST_Distance_Sphere(coord, ST_PointFromText(%s, 4326)) <= range'],
-        params=[lookup_point.wkt]
-    ).exists():
-        print 'point=%s is covered in %s.' %(point, country_name)
-    else:
-        print 'point=%s is not covered in %s' %(point, country_name)
-
-
-# remember to add country filter : look in the points which are within country borders
-# OpenCellId.objects.all().extra(
-#         where=['ST_Distance_Sphere(coord, ST_PointFromText(%s, 4326)) < range'],
-#         params=[p_cairo.wkt]
-# ).count()
-
