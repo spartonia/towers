@@ -1,46 +1,81 @@
-Postgres
---------
+# Intro
 
-`sudo apt-get update
-sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
-`
-PostGIS
--------
-`sudo apt-get install -y postgis postgresql-9.3-postgis-2.1`
+Towers is a python/django based project for visualizing GSM towers database from [OpenCellId.org](http://opencellid.org). It requires python 2.7.x and Django 1.7.
 
-`sudo su - postgres`
-`psql`
+# Installation Guide
 
-`CREATE DATABASE towers;`
-`CREATE USER toweruser WITH PASSWORD 'towerpass';`
+### Postgres
 
-`ALTER ROLE toweruser SET client_encoding TO 'utf8';`
+```
+$ sudo apt-get update
+$ sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
+```
 
-`GRANT ALL PRIVILEGES ON DATABASE Towers TO toweruser;`
+### PostGIS
 
-`\connect towers;`
-`CREATE EXTENSION postgis;`
-`CREATE EXTENSION postgis_topology;`
+```
+$ sudo apt-get install -y postgis postgresql-9.3-postgis-2.1
+```
+### Create database and enable PostGIS
 
-`\q`
-`exit`
+```
+$ sudo su - postgres
+> psql
 
-`sudo pip install virtualenv`
-`virtualenv motionlogic`
-`source motionlogic/bin/activate`
+> CREATE DATABASE towers;
+> CREATE USER toweruser WITH PASSWORD 'towerpass';
+> ALTER ROLE toweruser SET client_encoding TO 'utf8';
+> GRANT ALL PRIVILEGES ON DATABASE towers TO toweruser;
 
-`pip install -r requirements.txt`
+> \connect towers;
+> CREATE EXTENSION postgis;
+> CREATE EXTENSION postgis_topology;
 
+> \q
+> exit
+```
+Note: A complete guide on enabling geospatial database for Django could be found on django's official documentation [here](https://docs.djangoproject.com/en/1.7/ref/contrib/gis/install/) and [here](https://docs.djangoproject.com/en/1.7/ref/contrib/gis/install/geolibs/).
 
-cd ~/Towers
-python manage.py makemigrations
-python manage.py migrate
+### Install and create a Virtualenv
+```
+$ sudo pip install virtualenv
+$ virtualenv env
+$ source env/bin/activate
+```
+### Install Requirements
+```
+$ pip install -r requirements.txt
+```
+### Prepare project 
+Unzip the project file and `cd` to the project folder 
+```
+$ tar -zxvf motionlogic.tar.gz
+$ cd motionlogic/Towers
+$ python manage.py makemigrations
+$ python manage.py migrate
+```
+Create a user
+```
+$ python manage.py createsuperuser
+```
+Populate the database (Help yourself with a coffee) 
+```
+$ python poulate.py
+```
+Run following (only once per project) 
+```
+$ python manage.py collectstatic
+```
+Start server 
+```
+$ python manage.py runserver`
+```
+Open the browser and enter:
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-python manage.py createsuperuser
+Wait until the page loads. On the left upper corner you can search for lat/lon of a desired coordinate to find out if it is covered by the network. 
 
-python poulate.py
-
-python manage.py collectstatic
-
-python manage.py runserver
+##### Note: 
+* All countries in the OpecCellId dayabase is supported by the application. Currently the database is populated only with "Egypt" data. To enable world data or a specific country edit populate.py file and run populate_Opencellid() function again. 
+* We stick with the 4326 standard i.e (lat/lon) - which is inverse of google map coords- for creating geometries.
 
