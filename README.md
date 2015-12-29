@@ -58,9 +58,10 @@ Create a user
 ```
 $ python manage.py createsuperuser
 ```
+Download the data from opencellid.org, unzip it and place it in `motionlogic/data` folder as 'cell_towers.csv'. 
 Populate the database (Help yourself with a coffee) 
 ```
-$ python poulate.py
+$ python populate.py
 ```
 Run following (only once per project) 
 ```
