@@ -21,7 +21,7 @@ mcc_good = [
 
 def populate_OpenCellId(
     csv_file=os.path.join(
-        os.path.abspath('../'),
+        os.path.abspath('.'),
         'data',
         'cell_towers.csv'
     ),
@@ -74,7 +74,7 @@ def populate_OpenCellId(
 def populate_GADM(
     model=GADM,
     path_to_data=os.path.join(
-        os.path.abspath('../'),
+        os.path.abspath('.'),
         'data',
         'EGY_adm0.shp'
     ),
