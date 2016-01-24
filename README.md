@@ -77,6 +77,6 @@ Open the browser and enter:
 Wait until the page loads. On the left upper corner you can search for lat/lon of a desired coordinate to find out if it is covered by the network. 
 
 ##### Note: 
-* All countries in the OpecCellId dayabase is supported by the application. Currently the database is populated only with "Egypt" data. To enable world data or a specific country edit populate.py file and run populate_Opencellid() function again. 
+* All countries in the OpecCellId database is supported by the application. Currently the database is populated only with "Egypt" data. To enable world data or a specific country edit populate.py file and run populate_Opencellid() function again. 
 * We stick with the 4326 standard i.e (lat/lon) - which is inverse of google map coords- for creating geometries.
 
