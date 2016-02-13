@@ -209,3 +209,79 @@ gadm_mapping = {
     'ldc' : 'LDC',
     'geom' : 'POLYGON',
 }
+
+
+class GADM1(models.Model):
+    enabled = models.BooleanField(default=False)
+    id_0 = models.IntegerField()
+    iso = models.CharField(max_length=3)
+    name_0 = models.CharField(max_length=75)
+    id_1 = models.IntegerField()
+    name_1 = models.CharField(max_length=75)
+    hasc_1 = models.CharField(max_length=15)
+    ccn_1 = models.IntegerField()
+    cca_1 = models.CharField(max_length=254)
+    type_1 = models.CharField(max_length=50)
+    engtype_1 = models.CharField(max_length=50)
+    nl_name_1 = models.CharField(max_length=50)
+    varname_1 = models.CharField(max_length=150)
+    geom = models.MultiPolygonField(srid=4326)
+    objects = models.GeoManager()
+
+# Auto-generated `LayerMapping` dictionary for GADM1 model
+gadm1_mapping = {
+    'id_0' : 'ID_0',
+    'iso' : 'ISO',
+    'name_0' : 'NAME_0',
+    'id_1' : 'ID_1',
+    'name_1' : 'NAME_1',
+    'hasc_1' : 'HASC_1',
+    'ccn_1' : 'CCN_1',
+    'cca_1' : 'CCA_1',
+    'type_1' : 'TYPE_1',
+    'engtype_1' : 'ENGTYPE_1',
+    'nl_name_1' : 'NL_NAME_1',
+    'varname_1' : 'VARNAME_1',
+    'geom' : 'MULTIPOLYGON',
+}
+
+
+class GADM2(models.Model):
+    enabled = models.BooleanField(default=False)
+    id_0 = models.IntegerField()
+    iso = models.CharField(max_length=3)
+    name_0 = models.CharField(max_length=75)
+    id_1 = models.IntegerField()
+    name_1 = models.CharField(max_length=75)
+    id_2 = models.IntegerField()
+    name_2 = models.CharField(max_length=75)
+    hasc_2 = models.CharField(max_length=15)
+    ccn_2 = models.IntegerField()
+    cca_2 = models.CharField(max_length=254)
+    type_2 = models.CharField(max_length=50)
+    engtype_2 = models.CharField(max_length=50)
+    nl_name_2 = models.CharField(max_length=75)
+    varname_2 = models.CharField(max_length=150)
+    geom = models.MultiPolygonField(srid=4326)
+    objects = models.GeoManager()
+
+# Auto-generated `LayerMapping` dictionary for GADM2 model
+gadm2_mapping = {
+    'id_0' : 'ID_0',
+    'iso' : 'ISO',
+    'name_0' : 'NAME_0',
+    'id_1' : 'ID_1',
+    'name_1' : 'NAME_1',
+    'id_2' : 'ID_2',
+    'name_2' : 'NAME_2',
+    'hasc_2' : 'HASC_2',
+    'ccn_2' : 'CCN_2',
+    'cca_2' : 'CCA_2',
+    'type_2' : 'TYPE_2',
+    'engtype_2' : 'ENGTYPE_2',
+    'nl_name_2' : 'NL_NAME_2',
+    'varname_2' : 'VARNAME_2',
+    'geom' : 'MULTIPOLYGON',
+}
+
+
