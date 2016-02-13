@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import pandas as pd
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Towers.settings')
@@ -6,11 +7,16 @@ import django
 django.setup()
 
 from django.contrib.gis.utils import LayerMapping
+from django.db import IntegrityError, transaction
 
 from visualization.models import (
     OpenCellId,
     GADM,
+    GADM1,
+    GADM2,
     gadm_mapping,
+    gadm1_mapping,
+    gadm2_mapping
 )
 
 
@@ -72,30 +78,54 @@ def populate_OpenCellId(
 
 
 def populate_GADM(
-    model=GADM,
-    path_to_data=os.path.join(
-        os.path.abspath('.'),
-        'data',
-        'EGY_adm0.shp'
-    ),
-    mapping_dict=gadm_mapping,
+    model,
+    shp_file,
+    mapping_dict,
     verbose=False
 ):
+    """
+    Populates a model of GADM family
+    Parameters
+    ----------
+    model : <model>
+    shp_file : str
+    mapping_dict : dict
+    verbose : bool
+    """
     try:
         lm = LayerMapping(
             model,
-            path_to_data,
-            gadm_mapping,
+            shp_file,
+            mapping_dict,
             transform=False,
         )
-        lm.save()
+        with transaction.atomic():
+            lm.save(verbose=verbose)
+    except IntegrityError as ie:
+        print "Integrity error:", ie.message
     except Exception as e:
         print 'Error loading GADM data!'
         print e.message
-        pass
+
+
+def load():
+    populate_OpenCellId()
+    populate_GADM(
+        GADM,
+        './data/SWE_adm0.shp',
+        gadm_mapping
+    )
+    populate_GADM(
+        GADM1,
+        './data/SWE_adm1.shp',
+        gadm1_mapping
+    )
+    populate_GADM(
+        GADM2,
+        './data/SWE_adm2.shp',
+        gadm2_mapping
+    )
 
 
 if __name__ == '__main__':
-    populate_OpenCellId()
-    populate_GADM()
-    # pass
+    load()
