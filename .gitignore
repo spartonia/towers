@@ -10,7 +10,6 @@ __pycache__/
 .Python
 /.idea/
 staticfiles/
-migrations/
 env/
 build/
 develop-eggs/
