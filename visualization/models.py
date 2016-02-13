@@ -110,6 +110,10 @@ class GADM(models.Model):
     geom = models.MultiPolygonField(srid=4326, null=True)
     objects = models.GeoManager()
 
+    class Meta:
+        verbose_name = 'Country'
+        verbose_name_plural = 'Countries'
+
     @staticmethod
     def is_valid_point(
         country_name,
@@ -228,6 +232,11 @@ class GADM1(models.Model):
     geom = models.MultiPolygonField(srid=4326)
     objects = models.GeoManager()
 
+    class Meta:
+        verbose_name = 'State'
+        verbose_name_plural = 'States'
+
+
 # Auto-generated `LayerMapping` dictionary for GADM1 model
 gadm1_mapping = {
     'id_0' : 'ID_0',
@@ -264,6 +273,10 @@ class GADM2(models.Model):
     varname_2 = models.CharField(max_length=150)
     geom = models.MultiPolygonField(srid=4326)
     objects = models.GeoManager()
+
+    class Meta:
+        verbose_name = 'County'
+        verbose_name_plural = 'Counties'
 
 # Auto-generated `LayerMapping` dictionary for GADM2 model
 gadm2_mapping = {
