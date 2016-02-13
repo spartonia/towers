@@ -77,7 +77,6 @@ TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
     )
-print TEMPLATE_PATH
 
 TEMPLATES = [
     {
