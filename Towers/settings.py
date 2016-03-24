@@ -128,10 +128,14 @@ STATIC_PATH = os.path.join(BASE_DIR,'static')
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 STATIC_URL = '/static/' # You may find this is already defined as such.
+COLLECT_STATIC_PATH = os.path.join(BASE_DIR, 'static')
+
+if not os.path.exists(COLLECT_STATIC_PATH):
+    os.mkdir(COLLECT_STATIC_PATH)
 
 STATICFILES_DIRS = (
     STATIC_PATH,
-    # os.path.join(BASE_DIR, 'static'),
+    COLLECT_STATIC_PATH,
 )
 
 # Heroku
