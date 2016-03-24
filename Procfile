@@ -1,1 +1,1 @@
-web: gunicorn Towers.wsgi --log-file -
+web: python towers/manage.py collectstatic --noinput; gunicorn Towers.wsgi --log-file -
