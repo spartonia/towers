@@ -131,7 +131,15 @@ STATIC_URL = '/static/' # You may find this is already defined as such.
 
 STATICFILES_DIRS = (
     STATIC_PATH,
+    # os.path.join(BASE_DIR, 'static'),
 )
+
+# Heroku
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
 
 
 
