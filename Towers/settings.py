@@ -63,7 +63,12 @@ WSGI_APPLICATION = 'Towers.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
         # 'NAME': 'towers',
         # 'USER': 'toweruser',
         # 'PASSWORD': 'towerpass',
