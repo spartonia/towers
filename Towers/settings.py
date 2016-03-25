@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -71,6 +71,7 @@ DATABASES = {
         'PORT': '',
     }
 }
+
 
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
@@ -128,10 +129,19 @@ STATIC_PATH = os.path.join(BASE_DIR,'static')
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 STATIC_URL = '/static/' # You may find this is already defined as such.
+COLLECT_STATIC_PATH = os.path.join(BASE_DIR, 'static')
+
+if not os.path.exists(COLLECT_STATIC_PATH):
+    os.mkdir(COLLECT_STATIC_PATH)
 
 STATICFILES_DIRS = (
     STATIC_PATH,
+    COLLECT_STATIC_PATH,
 )
 
 
-
+# Heroku
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'

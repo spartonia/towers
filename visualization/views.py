@@ -2,7 +2,7 @@ import folium
 
 from django.shortcuts import render
 
-from .models import OpenCellId, GADM
+from .models import OpenCellId, GADM, GADM1, GADM2
 
 
 # NOTE : we stick with the 4326 standard i.e (lat/lon) - which is inverse of google map coords- for creating geometries.
@@ -31,7 +31,7 @@ def inline_map(
 
 
 def get_coordinates(
-    mcc_list=[602]
+    mcc_list=[240]
 ):
     """Returns lat/lon of the country of matching mcc_list
     Parameters
@@ -54,20 +54,28 @@ def get_coordinates(
 def index(request):
     context_dict = {}
     coords = get_coordinates()
-    boundry = GADM.objects.all()[0].geom.boundary
+    boundary = GADM.objects.filter(name_engli__iexact='Sweden')[0].geom.boundary
     towers = folium.Map(
-        location=boundry.centroid[::-1],
-        zoom_start=5,
+        location=boundary.centroid[::-1],
+        zoom_start=4,
         # tiles='OpenStreetMap'
         tiles='Mapbox Bright'
     )
-    for b_line in boundry:
-        b_line = [i[::-1] for i in b_line]
-        towers.line(b_line, line_color='green', line_weight=5)
-
+    # for b_line in boundary:
+    #     b_line = [i[::-1] for i in b_line]
+    #     towers.line(b_line, line_color='green', line_weight=5)
+    #
+    # adm1_boundaries = []
+    # for adm1 in GADM1.objects.filter(name_0__iexact='Sweden'):
+    #     adm1_boundaries.append(adm1.geom.boundary)
+    # for boundary in adm1_boundaries:
+    #     for b_line in boundary:
+    #         b_line = [i[::-1] for i in b_line]
+    #     towers.line(b_line, line_color='blue', line_weight=1)
+    coords = [(y, x) for x, y in coords]
     for loc in coords:
         towers.circle_marker(
-            location=loc[::-1],
+            location=loc,
             fill_color='orange',
             line_color='orange'
         )

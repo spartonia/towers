@@ -21,7 +21,7 @@ from visualization.models import (
 
 
 mcc_good = [
-    602,  # Egypt
+    240,  # Sweden
 ]
 
 
@@ -58,6 +58,8 @@ def populate_OpenCellId(
         inplace=True,
         drop=True
     )
+
+    good_data = good_data.iloc[:10000]  # to meet heroku free tier requirements.
 
     # bulk_open_cell_ids = []
     for idx, row in good_data.iterrows():
