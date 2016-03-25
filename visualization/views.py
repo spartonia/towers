@@ -54,24 +54,24 @@ def get_coordinates(
 def index(request):
     context_dict = {}
     coords = get_coordinates()
-    boundary = GADM.objects.all()[0].geom.boundary
+    boundary = GADM.objects.filter(name_engli__iexact='Sweden')[0].geom.boundary
     towers = folium.Map(
         location=boundary.centroid[::-1],
-        zoom_start=5,
+        zoom_start=4,
         # tiles='OpenStreetMap'
         tiles='Mapbox Bright'
     )
     for b_line in boundary:
         b_line = [i[::-1] for i in b_line]
         towers.line(b_line, line_color='green', line_weight=5)
-        
+
     adm1_boundaries = []
-    for adm1 in GADM1.objects.all():
+    for adm1 in GADM1.objects.filter(name_0__iexact='Sweden'):
         adm1_boundaries.append(adm1.geom.boundary)
     for boundary in adm1_boundaries:
         for b_line in boundary:
             b_line = [i[::-1] for i in b_line]
-        towers.line(b_line, line_color='blue', line_weight=3)
+        towers.line(b_line, line_color='blue', line_weight=1)
 
     for loc in coords:
         towers.circle_marker(
