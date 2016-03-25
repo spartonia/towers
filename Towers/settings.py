@@ -143,8 +143,5 @@ STATICFILES_DIRS = (
 # Heroku
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
-print "Database settings from env:"
-print db_from_env
-
 DATABASES['default'].update(db_from_env)
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
