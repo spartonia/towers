@@ -72,13 +72,13 @@ def index(request):
         for b_line in boundary:
             b_line = [i[::-1] for i in b_line]
         towers.line(b_line, line_color='blue', line_weight=1)
-
-    # for loc in coords:
-    #     towers.circle_marker(
-    #         location=loc[::-1],
-    #         fill_color='orange',
-    #         line_color='orange'
-    #     )
+    coords = [(y, x) for x, y in coords]
+    for loc in coords:
+        towers.circle_marker(
+            location=loc,
+            fill_color='orange',
+            line_color='orange'
+        )
 
     map_html = inline_map(towers)
     context_dict['map_html'] = map_html
