@@ -61,16 +61,16 @@ WSGI_APPLICATION = 'Towers.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'towers',
-        'USER': 'toweruser',
-        'PASSWORD': 'towerpass',
-        'HOST': '127.0.0.1',
-        'PORT': '',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'towers',
+#         'USER': 'toweruser',
+#         'PASSWORD': 'towerpass',
+#         'HOST': '127.0.0.1',
+#         'PORT': '',
+#     }
+# }
 
 # Heroku
 import dj_database_url
