@@ -64,24 +64,13 @@ WSGI_APPLICATION = 'Towers.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
+        'NAME': 'towers',
+        'USER': 'toweruser',
+        'PASSWORD': 'towerpass',
+        'HOST': '127.0.0.1',
         'PORT': '',
-        # 'NAME': 'towers',
-        # 'USER': 'toweruser',
-        # 'PASSWORD': 'towerpass',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': '',
     }
 }
-
-# Heroku
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
@@ -150,3 +139,12 @@ STATICFILES_DIRS = (
     COLLECT_STATIC_PATH,
 )
 
+
+# Heroku
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+print "Database settings from env:"
+print db_from_env
+
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
