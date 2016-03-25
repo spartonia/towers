@@ -1,7 +1,7 @@
 # Intro
 
 Towers is a python/django based project for visualizing GSM towers database from [OpenCellId.org](http://opencellid.org). It requires python 2.7.x and Django 1.7.
-
+[Demo](http://opencellid.herokuapp.com) on Heroku. 
 # Installation Guide
 
 ### Postgres
